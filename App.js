@@ -10,22 +10,22 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
-            name="Home"
-            component={HomeView}
-            options={{
-              title: 'Notepad 9000',
-              headerTitleStyle: {
-                color: Colors.primary,
-              },
-              headerStyle: {
-                backgroundColor: Colors.accent,
-              },
-              backgroundColor: Colors.primary,
-            }}
-          />
-        </Stack.Navigator>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="HW4"
+          component={HomeView}
+          options={{
+            title: 'HW4',
+            headerTitleStyle: {
+              color: Colors.primary,
+            },
+            headerStyle: {
+              backgroundColor: Colors.accent,
+            },
+            backgroundColor: Colors.primary,
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
