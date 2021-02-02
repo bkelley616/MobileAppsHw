@@ -5,5 +5,6 @@ export const Colors = {
   blue: '#88C0D0',
   darkBlue: '#5E81AC',
   purple: '#B48EAD',
-  red: '#BF616A'
+  red: '#BF616A',
+  green: '#A3BE8C',
 };

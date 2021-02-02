@@ -12,10 +12,10 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
-          name="HW4"
+          name="Home"
           component={HomeView}
           options={{
-            title: 'HW5',
+            title: 'HW6',
             headerTitleStyle: {
               color: Colors.primary,
             },
