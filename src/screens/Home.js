@@ -5,77 +5,76 @@ import {
   View,
   Text,
   SafeAreaView,
-  TextInput,
 } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+
 
 import {Colors} from '../../styles';
 
 const styles = StyleSheet.create({
-  cancelButton: {
+  button: {
     alignItems: 'center',
     justifyContent: 'center',
     height: 35,
     width: 100,
-    backgroundColor: Colors.red,
+    backgroundColor: Colors.blue,
     borderRadius: 5,
-    margin: 2.5,
+    margin: 5,
   },
-  saveButton: {
+  bigButton: {
     alignItems: 'center',
     justifyContent: 'center',
     height: 35,
-    width: 100,
-    backgroundColor: Colors.green,
+    width: '98%',
+    backgroundColor: Colors.purple,
     borderRadius: 5,
-    margin: 2.5,
-  },
-  label: {
-    margin: 8,
-  },
-  inputContainer: {
-    margin: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  inputLabel: {},
-  inputText: {
-    borderBottomColor: Colors.blue,
-    borderBottomWidth: 1,
-    width: "100%",
+    margin: 5,
   },
 });
 
 const HomeView = ({navigation}) => {
-  const [isSelected, setSelection] = useState(false);
+
   return (
-    <SafeAreaView>
-      <View>
-      <Text style={styles.inputLabel}>Comments</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.inputText}
-            multiline
-            numberOfLines={8}
-            editable
-            maxLength={40}
-          />
-        </View>
-      </View>
+      
       <View
         style={{
+          display: 'flex',
           flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-between'
+          flexDirection: 'column',
+          justifyContent: 'space-between',
         }}>
-        <TouchableOpacity style={styles.cancelButton} onPress={() => {}}>
-          <Text style={{fontWeight: 'bold',}}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.saveButton} onPress={() => {}}>
-          <Text style={{fontWeight: 'bold'}}>SAVE</Text>
-        </TouchableOpacity>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <TouchableOpacity style={styles.button} onPress={() => {}}>
+            <Text>Top Left</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => {}}>
+            <Text>Top Right</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{display: 'flex', flexDirection: 'row'}}>
+          <TouchableOpacity style={styles.bigButton} onPress={() => {}}>
+            <Text>Middle</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <TouchableOpacity style={styles.button} onPress={() => {}}>
+            <Text>Bottom Left</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => {}}>
+            <Text>Bottom Right</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </SafeAreaView>
   );
 };
 
