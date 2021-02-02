@@ -12,22 +12,23 @@ import CheckBox from '@react-native-community/checkbox';
 import {Colors} from '../../styles';
 
 const styles = StyleSheet.create({
-  button: {
+  cancelButton: {
     alignItems: 'center',
     justifyContent: 'center',
     height: 35,
     width: 100,
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.red,
     borderRadius: 5,
     margin: 2.5,
   },
-  checkboxContainer: {
-    flexDirection: 'row',
-    marginBottom: 5,
-    alignSelf: 'center',
-  },
-  checkbox: {
-    alignSelf: 'center',
+  saveButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 35,
+    width: 100,
+    backgroundColor: Colors.green,
+    borderRadius: 5,
+    margin: 2.5,
   },
   label: {
     margin: 8,
@@ -36,15 +37,12 @@ const styles = StyleSheet.create({
     margin: 8,
     flexDirection: 'row',
     alignItems: 'center',
-
   },
-  inputLabel: {
-  },
+  inputLabel: {},
   inputText: {
     borderBottomColor: Colors.blue,
     borderBottomWidth: 1,
-    width: 200,
-    marginLeft: 30,
+    width: "100%",
   },
 });
 
@@ -53,31 +51,28 @@ const HomeView = ({navigation}) => {
   return (
     <SafeAreaView>
       <View>
+      <Text style={styles.inputLabel}>Comments</Text>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>User Name:</Text>
-          <TextInput style={styles.inputText} editable maxLength={40} />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Password:</Text>
-          <TextInput style={styles.inputText} editable maxLength={40} />
-        </View>
-        <View style={styles.checkboxContainer}>
-          <CheckBox
-            value={isSelected}
-            onValueChange={setSelection}
-            tintColors={{true: Colors.green, false: Colors.darkBlue}}
-            style={styles.checkbox}
+          <TextInput
+            style={styles.inputText}
+            multiline
+            numberOfLines={8}
+            editable
+            maxLength={40}
           />
-          <Text style={styles.label}>Remember Password</Text>
         </View>
       </View>
       <View
         style={{
           flex: 1,
           flexDirection: 'row',
+          justifyContent: 'space-between'
         }}>
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
-          <Text style={{fontWeight: 'bold'}}>Log In</Text>
+        <TouchableOpacity style={styles.cancelButton} onPress={() => {}}>
+          <Text style={{fontWeight: 'bold',}}>Cancel</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.saveButton} onPress={() => {}}>
+          <Text style={{fontWeight: 'bold'}}>SAVE</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
