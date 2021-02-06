@@ -1,90 +1,95 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {
+  FlatList,
   StyleSheet,
-  ScrollView,
-  Button,
+  TouchableOpacity,
   View,
   Text,
-  Platform,
+  SafeAreaView,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import {ContactsContext} from '../Context';
 
+import {Colors} from '../../styles';
 
 const styles = StyleSheet.create({
-  headerText: {
-    fontSize: 30,
-    textAlign: "center",
-    margin: 50,
-    fontWeight: "bold"
+  container: {
+    flex: 1,
+    width: '100%',
+    paddingTop: 10,
   },
-  scrollText: {
-    fontSize: 30,
-    textAlign: "center",
-    margin: 50
+  item: {
+    paddingLeft: 20,
+    paddingTop: 15,
+    fontSize: 25,
+    alignSelf: 'center',
+    width: '100%',
   },
 });
 
 const HomeView = ({navigation}) => {
-  const [date, setDate] = useState(new Date(1598051730000));
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'android');
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
-  const showTimepicker = () => {
-    showMode('time');
-  };
+  const [contacts] = useContext(ContactsContext);
 
   return (
-    <ScrollView>
-       <View>
-      <View>
-        <Text style={styles.headerText}> Date and Time Picker Demo With Scrolling!</Text>
-      </View>
-      <View>
-        <Text style={styles.scrollText}> Click the button below to open the date picker!</Text>
-      </View>
+    <SafeAreaView style={{flex: 1}}>
+      <View style={{flex: 1, padding: 16}}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 25,
+              textAlign: 'center',
+              marginBottom: 25,
+            }}>
+            Contact List:
+          </Text>
 
-      <View>
-        <Button onPress={showDatepicker} title="Show date picker!"  />
+          <FlatList
+            style={{
+              borderWidth: 2,
+              borderRadius: 5,
+              borderColor: Colors.purple,
+              width: '100%',
+            }}
+            data={contacts}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ContactDetails', {
+                    enteredName: item.key,
+                    enteredNumber: item.number,
+                    enteredEmail: item.email,
+                  });
+                }}>
+                <Text style={styles.item}>{item.key}</Text>
+              </TouchableOpacity>
+            )}
+          />
+
+          <TouchableOpacity
+            style={{
+              marginTop: 40,
+              backgroundColor: Colors.blue,
+              borderRadius: 5,
+              padding: 10,
+            }}
+            onPress={() => {
+              navigation.navigate('AddContacts');
+            }}
+            underlayColor="#fff">
+            <Text
+              style={{
+                fontSize: 25,
+              }}>
+              Add Contact
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={{marginBottom: 200}}></View>
-      <View>
-        <Text style={styles.scrollText}> Keep on scrolling to find the Time Picker!!!!</Text>
-      </View>
-      <View style={{marginBottom: 200}}></View>
-      <View>
-        <Button onPress={showTimepicker} title="Show time picker!"  style={styles.button}/>
-      </View>
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )}
-    </View>
-    <View style={{marginBottom: 100}}></View>
-    <View>
-        <Text style={styles.scrollText}> You made it to the bottom!!</Text>
-      </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -1,15 +1,17 @@
 import React, {useState, createContext} from 'react';
 
-export const HeaderButtonContext = createContext();
+// Create Context Object
+export const ContactsContext = createContext();
 
-export const HeaderButtonContextProvider = (props) => {
-  let hiddenLocationsSwitch = {location1:0, location2:0, location3:0, location4:0};
+// Create a provider for components to consume and subscribe to changes
+export const ContactsContextProvider = (props) => {
+  let contactList = [];
 
-  const [hiddenLocationObject, setHiddenLocationSwitch] = useState(hiddenLocationsSwitch);
+  const [contacts, setContacts] = useState(contactList);
 
   return (
-    <HeaderButtonContext.Provider value={[hiddenLocationObject, setHiddenLocationSwitch]}>
+    <ContactsContext.Provider value={[contacts, setContacts]}>
       {props.children}
-    </HeaderButtonContext.Provider>
+    </ContactsContext.Provider>
   );
 };
