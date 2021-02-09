@@ -1,0 +1,60 @@
+ const [imageIndex, setImageIndex] = useState(1);
+
+
+
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+      }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#88C0D0',
+        }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingTop: 25,
+          }}>
+          <TouchableOpacity onClick={() => console.log("hi")}>
+            <Image
+              source={require('../assets/images/butterfly.jpg')}
+              style={styles.smallImage}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onClick={() => setImageIndex(2)}>
+            <Image
+              source={require('../assets/images/windows.jpg')}
+              style={styles.smallImage}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onClick={() => setImageIndex(3)}>
+            <Image
+              source={require('../assets/images/android.jpg')}
+              style={styles.smallImage}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View
+        style={{
+          flex: 3,
+          backgroundColor: '#E5E9F0',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+    
+        <Image
+          source={require('../assets/images/butterfly.jpg')}
+          style={styles.largeImage}
+        />
+        <Text>asdf: {imageIndex}</Text>
+      </View>
+    </View>
+  );
+};

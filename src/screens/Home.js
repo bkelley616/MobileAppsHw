@@ -1,13 +1,12 @@
-import React, {useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
-  FlatList,
+  Image,
   StyleSheet,
   TouchableOpacity,
   View,
   Text,
-  SafeAreaView,
+  Button,
 } from 'react-native';
-import {ContactsContext} from '../Context';
 
 import {Colors} from '../../styles';
 
@@ -17,79 +16,87 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingTop: 10,
   },
-  item: {
-    paddingLeft: 20,
-    paddingTop: 15,
-    fontSize: 25,
-    alignSelf: 'center',
-    width: '100%',
+  smallImage: {
+    marginBottom: 25,
+    width: 75,
+    height: 75,
+  },
+  largeImage: {
+    width: 250,
+    height: 250,
   },
 });
 
 const HomeView = ({navigation}) => {
-  const [contacts] = useContext(ContactsContext);
+  const [imageIndex, setImageIndex] = useState(0);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1, padding: 16}}>
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+      }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#D8DEE9',
+        }}>
         <View
           style={{
             flex: 1,
+            justifyContent: 'flex-start',
             alignItems: 'center',
-            justifyContent: 'center',
+            paddingTop: 25,
           }}>
-          <Text
-            style={{
-              fontSize: 25,
-              textAlign: 'center',
-              marginBottom: 25,
-            }}>
-            Contact List:
-          </Text>
-
-          <FlatList
-            style={{
-              borderWidth: 2,
-              borderRadius: 5,
-              borderColor: Colors.purple,
-              width: '100%',
-            }}
-            data={contacts}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('ContactDetails', {
-                    enteredName: item.key,
-                    enteredNumber: item.number,
-                    enteredEmail: item.email,
-                  });
-                }}>
-                <Text style={styles.item}>{item.key}</Text>
-              </TouchableOpacity>
-            )}
-          />
-
-          <TouchableOpacity
-            style={{
-              marginTop: 40,
-              backgroundColor: Colors.blue,
-              borderRadius: 5,
-              padding: 10,
-            }}
-            onPress={() => {
-              navigation.navigate('AddContacts');
-            }}
-            underlayColor="#fff">
-            <Text
-              style={{
-                fontSize: 25,
-              }}>
-              Add Contact
-            </Text>
+          <TouchableOpacity onPress={() => setImageIndex(1)}>
+            <Image
+              source={require('../assets/images/butterfly.jpg')}
+              style={styles.smallImage}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setImageIndex(2)}>
+            <Image
+              source={require('../assets/images/windows.jpg')}
+              style={styles.smallImage}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setImageIndex(3)}>
+            <Image
+              source={require('../assets/images/android.jpg')}
+              style={styles.smallImage}
+            />
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+      <View
+        style={{
+          flex: 3,
+          backgroundColor: '#E5E9F0',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {imageIndex === 1 && (
+          <Image
+            source={require('../assets/images/butterfly.jpg')}
+            style={styles.largeImage}
+          />
+        )}
+
+        {imageIndex === 2 && (
+          <Image
+            source={require('../assets/images/windows.jpg')}
+            style={styles.largeImage}
+          />
+        )}
+
+        {imageIndex === 3 && (
+          <Image
+            source={require('../assets/images/android.jpg')}
+            style={styles.largeImage}
+          />
+        )}
+      </View>
+    </View>
   );
 };
 
