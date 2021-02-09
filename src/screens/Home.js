@@ -1,100 +1,106 @@
 import React, {useState, useEffect} from 'react';
 import {
-  Image,
   StyleSheet,
   TouchableOpacity,
   View,
   Text,
-  Button,
+  TextInput,
+  FlatList,
 } from 'react-native';
 
 import {Colors} from '../../styles';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    paddingTop: 10,
-  },
-  smallImage: {
-    marginBottom: 25,
-    width: 75,
-    height: 75,
-  },
-  largeImage: {
-    width: 250,
-    height: 250,
-  },
-});
-
 const HomeView = ({navigation}) => {
-  const [imageIndex, setImageIndex] = useState(0);
+  const [linkAddress, setLinkAddress] = useState('');
+  const [savedBookmarks, setSavedBookmarks] = useState([]);
+  const renderItem = ({item}) => (
+    <TouchableOpacity onPress={() => {
+      navigation.navigate('WebView', {
+        webAddress: item,
+      });
+    }}
+      style={{
+        margin: 8,
+        alignItems: 'center',
+        padding: 8,
+        borderRadius: 5,
+        backgroundColor: '#8FBCBB',
+      }}>
+      <Text style={{fontSize: 20}}>{item}</Text>
+    </TouchableOpacity>
+  );
 
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'row',
-      }}>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#D8DEE9',
-        }}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            paddingTop: 25,
-          }}>
-          <TouchableOpacity onPress={() => setImageIndex(1)}>
-            <Image
-              source={require('../assets/images/butterfly.jpg')}
-              style={styles.smallImage}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setImageIndex(2)}>
-            <Image
-              source={require('../assets/images/windows.jpg')}
-              style={styles.smallImage}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setImageIndex(3)}>
-            <Image
-              source={require('../assets/images/android.jpg')}
-              style={styles.smallImage}
-            />
-          </TouchableOpacity>
-        </View>
+    <View style={{flex: 1, flexDirection: 'column'}}>
+      <View style={{alignItems: 'center', padding: 16}}>
+        <Text style={{fontSize: 32}}>Bookmarks:</Text>
       </View>
       <View
         style={{
-          flex: 3,
-          backgroundColor: '#E5E9F0',
-          justifyContent: 'center',
-          alignItems: 'center',
+          flex: 4,
+          flexDirection: 'column',
+          borderWidth: 5,
+          margin: 8,
+          borderRadius: 2,
+          borderColor: Colors.purple,
+          marginBottom: 16,
         }}>
-        {imageIndex === 1 && (
-          <Image
-            source={require('../assets/images/butterfly.jpg')}
-            style={styles.largeImage}
+        <FlatList
+          data={savedBookmarks}
+          renderItem={renderItem}
+          keyExtractor={(item) => item}
+        />
+      </View>
+      <View style={{flex: 1.25, flexDirection: 'column'}}>
+        <View style={{flexDirection: 'row'}}>
+          <TextInput
+            style={{
+              flex: 4,
+              alignItems: 'stretch',
+              margin: 8,
+              borderColor: Colors.blue,
+              borderWidth: 3,
+              borderRadius: 2,
+              fontSize: 20,
+            }}
+            onChangeText={(text) => setLinkAddress(text)}
+            value={linkAddress}
           />
-        )}
-
-        {imageIndex === 2 && (
-          <Image
-            source={require('../assets/images/windows.jpg')}
-            style={styles.largeImage}
-          />
-        )}
-
-        {imageIndex === 3 && (
-          <Image
-            source={require('../assets/images/android.jpg')}
-            style={styles.largeImage}
-          />
-        )}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('WebView', {
+                webAddress: linkAddress,
+              });
+            }}
+            style={{
+              flex: 1,
+              backgroundColor: Colors.green,
+              borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: 8,
+              padding: 4,
+            }}>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>submit</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <TouchableOpacity
+            onPress={() => setSavedBookmarks([...savedBookmarks, linkAddress])}
+            style={{
+              height: 50,
+              backgroundColor: Colors.purple,
+              borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 4,
+              margin: 8,
+            }}>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+              Add to Bookmarks!
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
