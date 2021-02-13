@@ -21,12 +21,17 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   crudButton: {
-    margin: 32,
+    margin: 28,
     alignItems: 'center',
-    backgroundColor: Colors.purple,
+    backgroundColor: Colors.blue,
     borderRadius: 5,
-    width: '70%',
+    width: '80%',
     padding: 8,
+  },
+  firstCrudText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginTop: 16
   },
   crudText: {
     fontSize: 28,
@@ -34,69 +39,37 @@ const styles = StyleSheet.create({
   },
 });
 
-import {openDatabase} from 'react-native-sqlite-storage';
 
-var db = openDatabase({name: 'UserDatabase.db'});
 
 import {Colors} from '../../styles';
 
 const HomeView = ({navigation}) => {
-  useEffect(() => {
-    db.transaction(function (txn) {
-      txn.executeSql(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='table_user'",
-        [],
-        function (tx, res) {
-          if (res.rows.length == 0) {
-            txn.executeSql('DROP TABLE IF EXISTS table_user', []);
-            txn.executeSql(
-              'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), user_contact INT(10), user_address VARCHAR(255))',
-              [],
-            );
-          }
-        },
-      );
-    });
-  }, []);
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{flex: 1}}>
         <View style={{flex: 1}}>
-          <Text style={styles.headerText}>SQLite Contact Database</Text>
+          <Text style={styles.headerText}>Books Search</Text>
         </View>
         <View
           style={{
-            borderBottomColor: Colors.blue,
+            borderBottomColor: Colors.purple,
             borderBottomWidth:  3,
             
           }}
         />
         <View style={{flex: 8, alignItems: 'center'}}>
+        <Text style={styles.firstCrudText}>Would you like to</Text>
           <TouchableOpacity
             style={styles.crudButton}
-            onPress={() => navigation.navigate('InsertView')}>
-            <Text style={styles.crudText}>Insert</Text>
+            onPress={() => navigation.navigate('BrowseAllScreen')}>
+            <Text style={styles.crudText}>Browse All</Text>
           </TouchableOpacity>
+          <Text style={styles.crudText}>Or</Text>
           <TouchableOpacity
             style={styles.crudButton}
-            onPress={() => navigation.navigate('ReadAllRecordsView')}>
-            <Text style={styles.crudText}>Read All Records</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.crudButton}
-            onPress={() => navigation.navigate('ReadOneRecordView')}>
-            <Text style={styles.crudText}>Read One Record</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.crudButton}
-            onPress={() => navigation.navigate('UpdateOneRecordView')}>
-            <Text style={styles.crudText}>Update One Record</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.crudButton}
-            onPress={() => navigation.navigate('DeleteOneRecordView')}>
-            <Text style={styles.crudText}>Delete One Record</Text>
+            onPress={() => navigation.navigate('SearchView')}>
+            <Text style={styles.crudText}>Search</Text>
           </TouchableOpacity>
         </View>
       </View>
