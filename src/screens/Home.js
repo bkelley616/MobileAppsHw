@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
+  SafeAreaView,
   TouchableOpacity,
+  FlatList,
+  Image,
   View,
   Text,
   TextInput,
@@ -9,178 +12,118 @@ import {
 } from 'react-native';
 
 import {Colors} from '../../styles';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
-import Geocoder from 'react-native-geocoding';
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
-    height: '100%',
-    width: 400,
-
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'white',
   },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  toggleModeButton: {
-    marginTop: 8,
-    backgroundColor: Colors.darkBlue,
-    padding: 12,
-    height: 42,
-    width: 100,
-    borderRadius: 5,
+  imageThumbnail: {
+    justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: Colors.purple,
-  },
-  toggleModeText: {
-    color: Colors.primary,
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  searchButton: {
-    margin: 8,
-    backgroundColor: Colors.darkBlue,
-    padding: 16,
-    height: 48,
-    width: 70,
-    borderRadius: 5,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: Colors.purple,
-  },
-  searchText: {
-    color: Colors.primary,
-    fontWeight: 'bold',
-    fontSize: 18,
+    height: 100,
   },
 });
 
-Geocoder.init('AIzaSyD9mrcLUNoo95K_UT2Rgjy-T6oqQH57bME');
+function extractImages(html) {
+  var imageUrls = [];
+  var re = /<img [^>]+? src="?([^"\s]+)/g;
+  html.replace(re, function (m, p1) {
+    imageUrls.push(p1);
+  });
+  return imageUrls;
+}
 
 const HomeView = ({navigation}) => {
-  const [address, onChangeText] = useState('');
-  const [mapType, changeMapType] = useState('standard');
-  const [location, setLocation] = useState({
-    latitude: 41.5025072,
-    longitude: -81.6746268,
-    latitudeDelta: 1.015,
-    longitudeDelta: 1.0121,
-  });
-  const [markers, setMarkers] = useState([]);
+  const [images, setImages] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [url, onChangeText] = React.useState('');
+
+  if (!loaded && url) {
+    fetch(url)
+      .then((resp) => {
+        return resp.text();
+      }).catch((e) => {
+        console.log(e)
+        setImages([])
+      })
+      .then((html) => {
+        console.log('running')
+        setImages(extractImages(html));
+      })
+      .catch((e) => {
+        console.log(e)
+        setImages([])
+      });
+    setLoaded(true);
+  }
 
   return (
-    <View style={{flex: 1, flexDirection: 'column'}}>
-      <View style={styles.container}>
-        <MapView
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          ref={(mapView) => {
-            _mapView = mapView;
+    <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          marginTop: 24,
+          marginBottom: 32,
+          borderBottomWidth: 4,
+          padding: 8,
+          borderColor: Colors.purple,
+        }}>
+        <TextInput
+          style={{
+            height: 40,
+            borderColor: 'gray',
+            borderWidth: 1,
+            width: '100%',
           }}
-          style={styles.map}
-          mapType={mapType}
-          region={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: location.latitudeDelta,
-            longitudeDelta: location.longitudeDelta,
+          onChangeText={(text) => onChangeText(text)}
+          value={url}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            setLoaded(false);
           }}
-          onPress={(e) => {
-            setLocation({
-              latitude: e.nativeEvent.coordinate.latitude,
-              longitude: e.nativeEvent.coordinate.longitude,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.0121
-            });
-            setMarkers([
-              ...markers,
-              {
-                latitude: e.nativeEvent.coordinate.latitude,
-                longitude: e.nativeEvent.coordinate.longitude
-              },
-            ]);
+          style={{
+            backgroundColor: Colors.green,
+            borderRadius: 5,
+            width: '80%',
+            alignItems: 'center',
+            margin: 8,
           }}>
-          {markers.map((marker, index) => (
-            <Marker key={index} coordinate={marker} />
-          ))}
-        </MapView>
+          <Text
+            style={{
+              fontSize: 28,
+              fontWeight: 'bold',
+            }}>
+            Scrape For Images
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={{marginTop: 40}}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <TextInput
+      <FlatList
+        data={images}
+        renderItem={({item}) => (
+          <View
             style={{
-              borderColor: 'gray',
-              borderWidth: 3,
-              borderColor: Colors.purple,
-              height: 48,
-              width: 300,
-              marginLeft: 8,
-              borderRadius: 3,
-              backgroundColor: Colors.primary
-            }}
-            onChangeText={(text) => onChangeText(text)}
-            value={address}
-          />
-          <TouchableOpacity
-            style={styles.searchButton}
-            onPress={() => {
-              Geocoder.from(address)
-                .then((json) => {
-                  var location = json.results[0].geometry.location;
-                  setLocation({
-                    latitude: location.lat,
-                    longitude: location.lng,
-                    latitudeDelta: 0.015,
-                    longitudeDelta: 0.0121,
-                  });
-                })
-                .catch((error) => console.warn(error));
+              flex: 1,
+              flexDirection: 'column',
+              margin: 8,
             }}>
-            <Text style={styles.searchText}>Go!</Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            marginTop: 40
-          }}>
-          <TouchableOpacity
-            style={styles.toggleModeButton}
-            onPress={() => {
-              Geolocation.getCurrentPosition((info) =>
-                setLocation({
-                  latitude: info.coords.latitude,
-                  longitude: info.coords.longitude,
-                  latitudeDelta: 0.015,
-                  longitudeDelta: 0.0121,
-                }),  error => Alert.alert('Error', JSON.stringify(error)),
-                {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-              );
-            }}>
-            <Text style={styles.toggleModeText}>Position</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.toggleModeButton}
-            onPress={() => changeMapType('standard')}>
-            <Text style={styles.toggleModeText}>Map</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.toggleModeButton}
-            onPress={() => changeMapType('satellite')}>
-            <Text style={styles.toggleModeText}>Satellite</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandImage', {url: item});
+              }}>
+              <Image style={styles.imageThumbnail} source={{uri: item}} />
+            </TouchableOpacity>
+          </View>
+        )}
+        numColumns={3}
+        keyExtractor={(item, index) => index}
+      />
+    </SafeAreaView>
   );
 };
 
