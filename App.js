@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {Colors} from './styles';
 import HomeView from './src/screens/Home';
-import BrowseAllView from './src/screens/BrowseAll';
 
 
 
@@ -19,28 +18,13 @@ const App = () => {
           name="Home"
           component={HomeView}
           options={{
-            title: 'HW15',
+            title: 'HW16',
             headerTitleStyle: {
               color: Colors.primary,
             },
             headerStyle: {
               backgroundColor: Colors.accent,
             },
-            backgroundColor: Colors.primary,
-          }}
-        />
-        <Stack.Screen
-          name="BrowseAllScreen"
-          component={BrowseAllView}
-          options={{
-            title: 'All Books',
-            headerTitleStyle: {
-              color: Colors.primary,
-            },
-            headerStyle: {
-              backgroundColor: Colors.accent,
-            },
-            headerTintColor: Colors.primary,
             backgroundColor: Colors.primary,
           }}
         />
