@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
+import {Surface, Shape} from '@react-native-community/art';
+
 import {
   StyleSheet,
   SafeAreaView,
@@ -12,6 +14,8 @@ import {
 } from 'react-native';
 
 import {Colors} from '../../styles';
+import * as Progress from 'react-native-progress';
+import ProgressPie from 'react-native-progress/Pie';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,111 +23,113 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
-  imageThumbnail: {
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  progressContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    margin: 100,
+  },
+  startButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 100,
+    height: 50,
+    width: 200,
+    backgroundColor: Colors.green,
+    borderRadius: 10,
+    margin: 15,
+  },
+  pauseButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    width: 200,
+    backgroundColor: Colors.red,
+    borderRadius: 10,
+    margin: 15,
+  },
+  restartButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    width: 200,
+    backgroundColor: Colors.purple,
+    borderRadius: 10,
+    margin: 15,
+  },
+  buttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 
-function extractImages(html) {
-  var imageUrls = [];
-  var re = /<img [^>]+? src="?([^"\s]+)/g;
-  html.replace(re, function (m, p1) {
-    imageUrls.push(p1);
-  });
-  return imageUrls;
+//helper function to allow progress state to update correctly
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
 }
 
-const HomeView = ({navigation}) => {
-  const [images, setImages] = useState([]);
-  const [loaded, setLoaded] = useState(false);
-  const [url, onChangeText] = React.useState('');
 
-  if (!loaded && url) {
-    fetch(url)
-      .then((resp) => {
-        return resp.text();
-      }).catch((e) => {
-        console.log(e)
-        setImages([])
-      })
-      .then((html) => {
-        console.log('running')
-        setImages(extractImages(html));
-      })
-      .catch((e) => {
-        console.log(e)
-        setImages([])
-      });
-    setLoaded(true);
-  }
+const HomeView = ({navigation}) => {
+  const [progress, setProgress] = useState(0.0);
+  const [running, setRunning] = useState(false);
+  
+  useInterval(() => {
+    if(running && progress < 100) {
+      setProgress(progress + (Math.random() * .01));
+    }
+  }, 100);
+
+  const startService = () => {
+    setRunning(true);
+  };
+  
+  const pauseService = () => {
+    setRunning(false);
+  };
+
+  const restartService = () => {
+    setProgress(0.0);
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'column',
-          marginTop: 24,
-          marginBottom: 32,
-          borderBottomWidth: 4,
-          padding: 8,
-          borderColor: Colors.purple,
-        }}>
-        <TextInput
-          style={{
-            height: 40,
-            borderColor: 'gray',
-            borderWidth: 1,
-            width: '100%',
-          }}
-          onChangeText={(text) => onChangeText(text)}
-          value={url}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            setLoaded(false);
-          }}
-          style={{
-            backgroundColor: Colors.green,
-            borderRadius: 5,
-            width: '80%',
-            alignItems: 'center',
-            margin: 8,
-          }}>
-          <Text
-            style={{
-              fontSize: 28,
-              fontWeight: 'bold',
-            }}>
-            Scrape For Images
-          </Text>
+    <View style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <View style={running ? {opacity: 0.5} :{opacity: 1.0}}>
+        <TouchableOpacity style={styles.startButton}  onPress={startService} disabled={running}>
+          <Text style={styles.buttonText}>Start Service</Text>
+        </TouchableOpacity>
+        </View>
+        <View style={!running ? {opacity: 0.5} :{opacity: 1.0}}>
+        <TouchableOpacity style={styles.pauseButton} onPress={pauseService} disabled={!running} activeOpacity={0}>
+          <Text style={styles.buttonText}>Pause Service</Text>
+        </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.restartButton} onPress={restartService}>
+          <Text style={styles.buttonText}>Restart Service</Text>
         </TouchableOpacity>
       </View>
-
-      <FlatList
-        data={images}
-        renderItem={({item}) => (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'column',
-              margin: 8,
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('ExpandImage', {url: item});
-              }}>
-              <Image style={styles.imageThumbnail} source={{uri: item}} />
-            </TouchableOpacity>
-          </View>
-        )}
-        numColumns={3}
-        keyExtractor={(item, index) => index}
-      />
-    </SafeAreaView>
+      <View style={styles.progressContainer}>
+        <Progress.Bar progress={progress} width={350} height={15} />
+      </View>
+    </View>
   );
 };
 
