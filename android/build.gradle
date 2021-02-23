@@ -9,6 +9,8 @@ buildscript {
         supportLibVersion = "24.2.0"
         playServicesVersion = "17.0.0" // or find latest version
         androidMapsUtilsVersion = "2.2.0"
+        googlePlayServicesVersion = "+" // default: "+"
+    firebaseMessagingVersion = "+" // default: "+"
     }
     repositories {
         google()
@@ -16,6 +18,7 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:3.5.3")
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
