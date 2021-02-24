@@ -16,36 +16,21 @@ import {Colors} from '../../styles';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
-  question: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    margin: 20,
-  },
-  questionText: {
-    fontSize: 24,
-    textAlign: 'center',
-    margin: 20,
-  },
-  trueButton: {
-    backgroundColor: Colors.green,
-    alignSelf: 'center',
+  
+  button: {
+    backgroundColor: Colors.blue,
+    alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
     height: 50,
-    width: 150,
+    width: '90%',
+    borderRadius: 6,
+    margin: 20
   },
-  falseButton: {
-    backgroundColor: Colors.red,
-    alignSelf: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    height: 50,
-    width: 150,
-  },
+  
   buttonText: {
     fontSize: 20,
     textAlign: 'center',
@@ -60,93 +45,43 @@ const styles = StyleSheet.create({
     width: 100,
     margin: 10
   },
-  actionText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  checkText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 20
-  },
+
 });
-
+const message = (name) => { console.log(`messaging ${name}`)}
 const HomeView = ({navigation}) => {
+  const [contacts, setContacts] = useState([{name: 'Person 1'}, {name: 'Person 2'}, {name: 'Person 3'}, {name: 'Person 4'}, {name: 'Person 5'}, {name: 'Person 6'}, {name: 'Person 7'}, {name: 'Person 8'}]);
+  const addContact = () => { setContacts([...contacts, {name: `Person ${contacts.length + 1}`}])}
+  const renderItem = ({item}) => (
+    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignSelf:'center', backgroundColor: '#e1e2e2', margin: 5, width: 350, padding: 5, alignItems: 'center'}}>
+            <Text style={{fontSize: 20}}>{item.name}</Text>
+      <TouchableOpacity onPress={() => message(item.name)}
+      style={{
+        margin: 8,
+        alignItems: 'center',
+        padding: 8,
+        borderRadius: 5,
+        backgroundColor: Colors.purple,
 
-  const [questions, setQuestions] = useState([{title: 'Canberra is the capital of Australia.', answer: true}, {title: 'The Pacific Ocean is larger than the Atlantic Ocean.', answer: true}, 
-  {title: 'The Suez Canal connects the Red Sea and the Indian Ocean.', answer: false}, {title: 'The source of the Nile River is in Egypt.', answer: false},
-  {title: 'The source of the Nile River is in Egypt.', answer: true}, {title: 'Lake Baikal is the world\'s oldest and deepest freshwater lake.', answer: true}]);
-  const [index, setIndex] = useState(0);
-  const [checkAnswer, setCheckAnswer] = useState(0);
-  const [backCount, setBackCount] = useState(0);
-
-  const selectFalse = () => {
-    questions[index].answer === false ? setCheckAnswer(1) : setCheckAnswer(-1)
-  };
-  const selectTrue = () => {
-    questions[index].answer === true ? setCheckAnswer(1) : setCheckAnswer(-1)
-  };
-  const back = () => {
-    setCheckAnswer(0)
-    setBackCount(1)
-    setIndex(index - 1)
-  };
-
-  const next = () => {
-    setCheckAnswer(0)
-    setBackCount(0)
-    setIndex(index + 1)
-  };
+      }}>
+      <Text style={{fontSize: 20}}>Message</Text>
+    </TouchableOpacity>
+    </View>
+    
+  );
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.question}>
-        <Text style={styles.questionText}>
-          {questions[index].title}
-          {'\n\n'}
-        <Text style={styles.checkText}>{ checkAnswer === 1 ? 'Correct! :)' : checkAnswer === -1 ? 'Incorrect! :(' : null}</Text>
-        </Text>
+      <TouchableOpacity style={styles.button} onPress={addContact}>
+        <Text style={styles.buttonText}>Add More Contacts</Text>
       </TouchableOpacity>
-      <View style={{
-        display: 'flex',
-        flexDirection:'row',
-        justifyContent:'center',
-        margin: 16
-      }}>
-      <TouchableOpacity style={styles.falseButton} onPress={selectFalse}>
-        <Text style={styles.actionText}>
-          False
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.trueButton} onPress={selectTrue}>
-        <Text style={styles.actionText}>
-          True
-        </Text>
-      </TouchableOpacity>
-      </View>
-      <View style={{
-        display: 'flex',
-        flexDirection:'row',
-        justifyContent:'center',
-        margin: 16
-      }}>
-      <View style={index - 1 < 0 || backCount > 0  ? {opacity: 0.5} :{opacity: 1.0}}>
-      <TouchableOpacity style={styles.actionButton} onPress={back} disabled={index - 1 < 0 || backCount > 0}>
-        <Text style={styles.actionText}>
-        {'<<'} Back
-        </Text>
-      </TouchableOpacity>
-      </View>
-      <View style={index + 1 > questions.length - 1 ? {opacity: 0.5} :{opacity: 1.0}}>
-      <TouchableOpacity style={styles.actionButton} onPress={next} disabled={index + 1 > questions.length - 1}>
-        <Text style={styles.actionText}>
-          Next {'>>'}
-        </Text>
-      </TouchableOpacity>
-      </View>
-      </View>
+      <FlatList
+        data={contacts}
+        renderItem={renderItem}
+        keyExtractor={item => item.name}
+        style={{
+          marginBottom: 32,
+        }}
+      />
     </View>
   );
 };
