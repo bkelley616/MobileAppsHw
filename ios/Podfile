@@ -16,6 +16,8 @@ target 'MobileAppsHw' do
 
   pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
 
+  pod 'RNSketchCanvas', :path => '../node_modules/@terrylinla/react-native-sketch-canvas'
+
   target 'MobileAppsHwTests' do
     inherit! :complete
     # Pods for testing

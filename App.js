@@ -15,7 +15,7 @@ const App = () => {
           name="Home"
           component={HomeView}
           options={{
-            title: 'HW21',
+            title: 'HW22',
             headerTitleStyle: {
               color: Colors.primary,
             },
